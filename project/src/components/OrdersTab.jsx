@@ -1,35 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import DatePicker from 'react-datepicker';
+import React, { useState, useEffect } from "react";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { getOrders } from '../services/api';
-import { Calendar, Filter, ArrowUpDown } from 'lucide-react';
-import { formatEpochTime } from '../utils/dateUtils';
+import { getOrders } from "../services/api";
+import { Calendar, Filter, ArrowUpDown } from "lucide-react";
+import { formatEpochTime } from "../utils/dateUtils";
 
 export default function OrdersTab() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [orders, setOrders] = useState([]);
-  const [sortBy, setSortBy] = useState('date');
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [sortBy, setSortBy] = useState("date");
+  const [filterStatus, setFilterStatus] = useState("all");
+
+  const formatDateToIST = (date) => {
+    const inputDate = date ? new Date(date) : new Date();
+    const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
+    const ISTDate = new Date(inputDate.getTime() + IST_OFFSET_MS);
+    return ISTDate.toISOString().split("T")[0];
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const data = await getOrders(selectedDate.toISOString().split('T')[0]);
+        const data = await getOrders(formatDateToIST(selectedDate));
         setOrders(data.orders);
       } catch (error) {
-        console.error('Failed to fetch orders:', error);
+        console.error("Failed to fetch orders:", error);
       }
     };
     fetchOrders();
   }, [selectedDate]);
 
-  const filteredOrders = orders
-    .sort((a, b) => {
-      if (sortBy === 'date') {
-        return b.placed_on - a.placed_on;
-      }
-      return b.total_amount - a.total_amount;
-    });
+  const filteredOrders = orders.sort((a, b) => {
+    if (sortBy === "date") {
+      return b.placed_on - a.placed_on;
+    }
+    return b.total_amount - a.total_amount;
+  });
 
   return (
     <div className="p-6">
@@ -102,15 +108,17 @@ export default function OrdersTab() {
                   {formatEpochTime(order.placed_on)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                     ₹{order.status === 'completed' ? 'bg-green-100 text-green-800' : 
                       order.status === 'cancelled' ? 'bg-red-100 text-red-800' : 
-                      'bg-yellow-100 text-yellow-800'}`}>
+                      'bg-yellow-100 text-yellow-800'}`}
+                  >
                     {order.status}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                ₹{order.total_amount.toFixed(2)}
+                  ₹{order.total_amount.toFixed(2)}
                 </td>
               </tr>
             ))}

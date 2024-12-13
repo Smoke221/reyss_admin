@@ -23,7 +23,14 @@ export const getOrders = async (date) => {
 };
 
 export const getUsers = async (search) => {
-  const response = await api.get(`/allUsers${search ? `?search=${search}` : ""}`);
+  const response = await api.get(
+    `/allUsers${search ? `?search=${search}` : ""}`
+  );
+  return response.data.data;
+};
+
+export const addUser = async (userDetails) => {
+  const response = await api.post(`/addUser`, userDetails);
   return response.data.data;
 };
 
@@ -48,7 +55,7 @@ export const getProducts = async () => {
 };
 
 export const addProduct = async (productData) => {
-  const response = await api.post("/products", productData);
+  const response = await api.post("/newItem", productData);
   return response.data;
 };
 
