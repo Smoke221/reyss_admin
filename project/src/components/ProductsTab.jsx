@@ -179,8 +179,8 @@ export default function ProductsTab() {
                   Category: {product.category}
                 </p>
                 <p className="text-lg font-bold">Price: ₹{product.price}</p>
-                <p className="text-lg font-bold">
-                  DiscountPrice: ₹{product.discountPrice}
+                <p className="text-lg font-bold text-red-600">
+                  Discounted Price: ₹{product.discountPrice}
                 </p>
               </div>
               <div className="flex justify-between mt-4">

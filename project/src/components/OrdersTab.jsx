@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { exportOrder, getOrders } from "../services/api";
 import { Calendar, Filter, ArrowUpDown } from "lucide-react";
 import { formatEpochTime } from "../utils/dateUtils";
+import ExportOrdersButton from "./ExportOrdersButton";
 
 export default function OrdersTab() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -38,16 +39,19 @@ export default function OrdersTab() {
   });
 
   const handleSendOrders = async () => {
+    // Generate the filename based on the selectedDate
     const fileName = `orders_${formatDateToIST(selectedDate)}.xlsx`;
+
     try {
-      const response = await exportOrder(orders);
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "orders.xlsx"); // Name the file to be downloaded
-      document.body.appendChild(link);
-      link.click(); // Trigger download
-      document.body.removeChild(link);
+      // Convert the filteredOrders data into a worksheet format
+      const ws = XLSX.utils.json_to_sheet(filteredOrders);
+
+      // Create a new workbook and append the worksheet
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Orders");
+
+      // Write the workbook to a file with the dynamic filename
+      XLSX.writeFile(wb, fileName);
     } catch (error) {
       console.error("Failed to fetch orders:", error);
     }
@@ -151,12 +155,7 @@ export default function OrdersTab() {
           </tbody>
         </table>
       </div>
-      <button
-        onClick={handleSendOrders}
-        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none"
-      >
-        Export Orders
-      </button>
+      <ExportOrdersButton filteredOrders={filteredOrders} selectedDate={selectedDate} />
     </div>
   );
 }
