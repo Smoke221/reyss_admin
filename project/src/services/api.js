@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8090",
+  baseURL: "http://192.168.0.101:8090",
 });
 
 api.interceptors.request.use((config) => {
@@ -35,12 +35,12 @@ export const addUser = async (userDetails) => {
 };
 
 export const updateUser = async (userId, userData) => {
-  const response = await api.put(`/allUsers/${userId}`, userData);
+  const response = await api.post(`/update?customer_id=${userId}`, userData);
   return response.data.data;
 };
 
-export const toggleUserBlock = async (userId, blocked) => {
-  const response = await api.patch(`/allUsers/${userId}`, { blocked });
+export const toggleUserBlock = async (userId, status) => {
+  const response = await api.post(`/update?customer_id=${userId}`, { status });
   return response.data.data;
 };
 
@@ -60,11 +60,23 @@ export const addProduct = async (productData) => {
 };
 
 export const updateProduct = async (productId, productData) => {
-  const response = await api.put(`/products/${productId}`, productData);
+  const response = await api.post(`/editProd?id=${productId}`, productData);
   return response.data;
 };
 
 export const updateProductsByBrand = async (brand, updateData) => {
   const response = await api.patch(`/products/brand/${brand}`, updateData);
+  return response.data;
+};
+
+export const exportOrder = async (body) => {
+  console.log(`🪵 → body:`, body);
+  const response = await api.post(
+    `/export`, // Your backend endpoint
+    body, // Sending body data
+    {
+      responseType: "blob", // Ensure that the response is treated as a blob for file download
+    }
+  );
   return response.data;
 };

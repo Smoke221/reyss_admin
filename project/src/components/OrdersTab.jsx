@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { getOrders } from "../services/api";
+import { exportOrder, getOrders } from "../services/api";
 import { Calendar, Filter, ArrowUpDown } from "lucide-react";
 import { formatEpochTime } from "../utils/dateUtils";
 
@@ -36,6 +36,22 @@ export default function OrdersTab() {
     }
     return b.total_amount - a.total_amount;
   });
+
+  const handleSendOrders = async () => {
+    const fileName = `orders_${formatDateToIST(selectedDate)}.xlsx`;
+    try {
+      const response = await exportOrder(orders);
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "orders.xlsx"); // Name the file to be downloaded
+      document.body.appendChild(link);
+      link.click(); // Trigger download
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Failed to fetch orders:", error);
+    }
+  };
 
   return (
     <div className="p-6">
@@ -80,7 +96,7 @@ export default function OrdersTab() {
         </div>
       </div>
 
-      <div className="bg-white shadow-md rounded-lg">
+      <div className="bg-white shadow-md rounded-lg mb-4">
         <table className="min-w-full">
           <thead>
             <tr className="bg-gray-50">
@@ -94,7 +110,10 @@ export default function OrdersTab() {
                 Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Total
+                Customer Paid
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Indent Amount
               </th>
             </tr>
           </thead>
@@ -110,21 +129,34 @@ export default function OrdersTab() {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                    ₹{order.status === 'completed' ? 'bg-green-100 text-green-800' : 
-                      order.status === 'cancelled' ? 'bg-red-100 text-red-800' : 
-                      'bg-yellow-100 text-yellow-800'}`}
+                    ${
+                      order.status === "completed"
+                        ? "bg-green-100 text-green-800"
+                        : order.status === "cancelled"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-yellow-100 text-yellow-800"
+                    }`}
                   >
                     {order.status}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  ₹{order.total_amount.toFixed(2)}
+                  ₹{order.total_amount}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  ₹{order.amount}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <button
+        onClick={handleSendOrders}
+        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none"
+      >
+        Export Orders
+      </button>
     </div>
   );
 }

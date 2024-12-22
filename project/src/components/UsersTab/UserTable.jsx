@@ -1,6 +1,6 @@
-import React from 'react';
-import { Lock, Unlock, Edit } from 'lucide-react';
-import { formatEpochTime } from '../../utils/dateUtils';
+import React from "react";
+import { Lock, Unlock, Edit } from "lucide-react";
+import { formatEpochTime } from "../../utils/dateUtils";
 
 export default function UserTable({ users, onToggleBlock, onEditUser }) {
   return (
@@ -41,20 +41,31 @@ export default function UserTable({ users, onToggleBlock, onEditUser }) {
                 {user.phone}
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                  ${user.isBlocked ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
-                  {user.isBlocked ? 'Blocked' : 'Active'}
+                <span
+                  className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+    ${
+      user.status === "Block"
+        ? "bg-red-100 text-red-800"
+        : "bg-green-100 text-green-800"
+    }`}
+                >
+                  {user.status === "Block" ? "Block" : "Active"}
                 </span>
               </td>
+
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {formatEpochTime(user.created_at)}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <button
-                  onClick={() => onToggleBlock(user.id, user.isBlocked)}
+                  onClick={() => onToggleBlock(user.customer_id, user.status)}
                   className="text-indigo-600 hover:text-indigo-900 mr-4"
                 >
-                  {user.isBlocked ? <Unlock className="h-5 w-5" /> : <Lock className="h-5 w-5" />}
+                  {user.status === "Active" ? (
+                    <Unlock className="h-5 w-5" />
+                  ) : (
+                    <Lock className="h-5 w-5" />
+                  )}
                 </button>
                 <button
                   onClick={() => onEditUser(user)}

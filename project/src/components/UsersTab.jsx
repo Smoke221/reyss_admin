@@ -16,7 +16,6 @@ export default function UsersTab() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [editForm, setEditForm] = useState({
     username: "",
-    customer_id: "",
     phone: "",
   });
   const [showAddModal, setShowAddModal] = useState(false);
@@ -47,12 +46,21 @@ export default function UsersTab() {
 
   const handleToggleBlock = async (userId, currentStatus) => {
     try {
-      await toggleUserBlock(userId, !currentStatus);
+      // Toggle between 'Block' and 'Active'
+      const newStatus = currentStatus === "Block" ? "Active" : "Block";
+
+      // Call the toggleUserBlock function with the new status
+      await toggleUserBlock(userId, newStatus);
+
+      // Fetch users again to reflect the change
       fetchUsers(searchTerm);
+
+      // Show a success message
       toast.success(
-        `User ${currentStatus ? "Activated" : "Blocked"} successfully`
+        `User ${newStatus === "Block" ? "Blocked" : "Activated"} successfully`
       );
     } catch (error) {
+      // Show an error message if something goes wrong
       toast.error("Failed to update user status");
     }
   };
@@ -61,14 +69,13 @@ export default function UsersTab() {
     setSelectedUser(user);
     setEditForm({
       username: user.username,
-      customer_id: user.customer_id,
       phone: user.phone,
     });
   };
 
   const handleUpdateUser = async () => {
     try {
-      await updateUser(selectedUser.id, editForm);
+      await updateUser(selectedUser.customer_id, editForm);
       fetchUsers(searchTerm);
       setSelectedUser(null);
       toast.success("User updated successfully");
