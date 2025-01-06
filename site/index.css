@@ -20,7 +20,7 @@ body {
 
 .nav {
   background: white;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: fixed;
   width: 100%;
@@ -101,12 +101,11 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
-  margin-top: 2rem;
 }
 
 .feature-card {
   background: white;
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -158,7 +157,6 @@ body {
   margin-bottom: 0.8rem;
 }
 
-
 .app-screenshots {
   width: 100%;
   padding: 20px 0;
@@ -188,6 +186,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   justify-items: center;
+  gap: 2rem;
   max-width: 1000px;
   margin: 0 auto;
 }
@@ -197,6 +196,9 @@ body {
   transition: transform 0.3s ease;
   width: 100%;
   max-width: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .brand-card:hover {
@@ -204,19 +206,21 @@ body {
 }
 
 .brand-logo {
-  width: 120px;
-  height: 80px;
+  width: 150px;
+  height: 100px;
   object-fit: contain;
   margin-bottom: 1rem;
 }
 
 .onboarding-section {
+  max-width: 1200px;
+  margin: auto;
   background: var(--brand-yellow);
   padding: 4rem 2rem;
 }
 
 .onboarding-content {
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -238,17 +242,15 @@ body {
   margin-bottom: 0;
 }
 
-.step-number {
-  background: var(--primary-red);
-  color: white;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.step-icon {
+  color: var(--primary-red);
+  font-size: 24px;
   margin-right: 1rem;
   flex-shrink: 0;
+}
+
+.step-icon:hover {
+  color: var(--primary-dark-red);
 }
 
 .contact-section {
@@ -257,16 +259,17 @@ body {
 }
 
 .contact-content {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   text-align: center;
 }
 
 .contact-card {
-  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-top: 2rem;
 }
 
@@ -291,6 +294,7 @@ body {
   background: var(--primary-red);
   color: white;
   text-align: center;
+  max-width: 1200px;
 }
 
 .button {
@@ -308,7 +312,17 @@ footer {
   background: var(--text-dark);
   color: white;
   text-align: center;
-  padding: 2rem;
+  padding: 1rem;
+}
+
+footer p {
+  font-size: 0.8rem;
+}
+
+footer p:last-child {
+  color: rgb(156, 156, 156);
+  margin-top: 1rem;
+  font-size: 0.5rem;
 }
 
 @media (max-width: 768px) {
