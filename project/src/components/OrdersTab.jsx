@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { exportOrder, getOrders } from "../services/api";
+import { getOrders } from "../services/api";
 import { Calendar, Filter, ArrowUpDown } from "lucide-react";
 import { formatEpochTime } from "../utils/dateUtils";
 import ExportOrdersButton from "./ExportOrdersButton";
@@ -134,14 +134,14 @@ export default function OrdersTab() {
                   <span
                     className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                     ${
-                      order.status === "completed"
+                      order.delivery_status === "delivered"
                         ? "bg-green-100 text-green-800"
-                        : order.status === "cancelled"
+                        : order.delivery_status === "cancelled"
                         ? "bg-red-100 text-red-800"
                         : "bg-yellow-100 text-yellow-800"
                     }`}
                   >
-                    {order.status}
+                    {order.delivery_status}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

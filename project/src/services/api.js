@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://192.168.0.101:8090",
+  baseURL: "http://16.171.111.246:8090",
 });
 
 api.interceptors.request.use((config) => {
@@ -66,17 +66,5 @@ export const updateProduct = async (productId, productData) => {
 
 export const updateProductsByBrand = async (brand, updateData) => {
   const response = await api.patch(`/products/brand/${brand}`, updateData);
-  return response.data;
-};
-
-export const exportOrder = async (body) => {
-  console.log(`🪵 → body:`, body);
-  const response = await api.post(
-    `/export`, // Your backend endpoint
-    body, // Sending body data
-    {
-      responseType: "blob", // Ensure that the response is treated as a blob for file download
-    }
-  );
   return response.data;
 };
